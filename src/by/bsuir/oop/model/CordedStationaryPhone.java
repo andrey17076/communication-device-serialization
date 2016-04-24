@@ -2,12 +2,12 @@ package by.bsuir.oop.model;
 
 public class CordedStationaryPhone extends StationaryPhone {
 
-    private enum DialerType { DISK, KEYPAD };
+    public enum DialerType { DISK, KEYPAD };
 
     public int cordLength; //in metres;
 
     public boolean isWallMountable;
-    public boolean hasHandSetKeyboard;
+    public boolean isHasHandSetKeyboard;
 
     public DialerType dialer;
 
@@ -28,11 +28,11 @@ public class CordedStationaryPhone extends StationaryPhone {
     }
 
     public boolean isHasHandSetKeyboard() {
-        return hasHandSetKeyboard;
+        return isHasHandSetKeyboard;
     }
 
     public void setHasHandSetKeyboard(boolean hasHandSetKeyboard) {
-        this.hasHandSetKeyboard = hasHandSetKeyboard;
+        isHasHandSetKeyboard = hasHandSetKeyboard;
     }
 
     public DialerType getDialer() {

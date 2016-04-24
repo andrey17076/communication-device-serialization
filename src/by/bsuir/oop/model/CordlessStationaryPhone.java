@@ -2,25 +2,25 @@ package by.bsuir.oop.model;
 
 public class CordlessStationaryPhone extends StationaryPhone {
 
-    public boolean hasBluetooth;
-    public boolean hasPaging;
+    public boolean isHasBluetooth;
+    public boolean isHasPaging;
 
     public int coverage; //in metres
 
     public boolean isHasBluetooth() {
-        return hasBluetooth;
+        return isHasBluetooth;
     }
 
     public void setHasBluetooth(boolean hasBluetooth) {
-        this.hasBluetooth = hasBluetooth;
+        isHasBluetooth = hasBluetooth;
     }
 
     public boolean isHasPaging() {
-        return hasPaging;
+        return isHasPaging;
     }
 
     public void setHasPaging(boolean hasPaging) {
-        this.hasPaging = hasPaging;
+        isHasPaging = hasPaging;
     }
 
     public int getCoverage() {

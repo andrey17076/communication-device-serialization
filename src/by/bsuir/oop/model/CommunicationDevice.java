@@ -7,7 +7,7 @@ public abstract class CommunicationDevice {
     public String brand;
     public String model;
 
-    public boolean hasVolumeControl;
+    public boolean isHasVolumeControl;
     public AntennaType antenna;
 
     public String getBrand() {
@@ -27,11 +27,11 @@ public abstract class CommunicationDevice {
     }
 
     public boolean isHasVolumeControl() {
-        return hasVolumeControl;
+        return isHasVolumeControl;
     }
 
     public void setHasVolumeControl(boolean hasVolumeControl) {
-        this.hasVolumeControl = hasVolumeControl;
+        isHasVolumeControl = hasVolumeControl;
     }
 
     public AntennaType getAntenna() {

@@ -30,37 +30,30 @@ public class Main extends Application {
         saveButton.setMinWidth(90);
         saveButton.setMaxWidth(90);
 
-        //Table for fields
-        TableView fieldsTable = new TableView();
-        fieldsTable.setMinWidth(300);
-        fieldsTable.setMaxWidth(300);
-        fieldsTable.setEditable(true);
-        fieldsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-
-        TableColumn fieldName = new TableColumn("Field Name");
-        fieldName.setMinWidth(200);
-        fieldName.setMaxWidth(200);
-
-        TableColumn fieldValue = new TableColumn("Value");
-        fieldValue.setMinWidth(100);
-        fieldValue.setMaxWidth(100);
-
-        fieldsTable.getColumns().addAll(fieldName, fieldValue);
+        //Pane for device fields
+        ScrollPane fieldsPane = new ScrollPane();
+        fieldsPane.setMinWidth(300);
+        fieldsPane.setMaxWidth(300);
+        fieldsPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         //List of devices
         ListView<CommunicationDevice> listView = new ListView<>();
         listView.setPrefHeight(Region.USE_COMPUTED_SIZE);
         listView.setMinWidth(300);
         listView.setMaxWidth(300);
-        listView.setOnMousePressed(event -> controller.showDeviceFields(listView.getSelectionModel().getSelectedItem(), fieldName, fieldValue));
+        listView.setOnMousePressed(event -> {
+            CommunicationDevice selected = listView.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                controller.showDeviceFields(selected, fieldsPane);
+            }
+        });
 
         //List controls
         ComboBox<Class> devicesComboBox = new ComboBox<>();
         devicesComboBox.setMinWidth(200);
         devicesComboBox.setMaxWidth(200);
         devicesComboBox.getItems().addAll(controller.getAvailableClasses());
-        devicesComboBox.setConverter(controller.getStringConverter());
+        devicesComboBox.setConverter(controller.getClassStringConverter());
 
         devicesComboBox.getSelectionModel().selectFirst();
 
@@ -100,7 +93,7 @@ public class Main extends Application {
         HBox mainLayout = new HBox();
         mainLayout.setPadding(new Insets(15));
         mainLayout.setSpacing(10);
-        mainLayout.getChildren().addAll(serializersMenu, listMenu, fieldsTable);
+        mainLayout.getChildren().addAll(serializersMenu, listMenu, /*fieldsTable*/ fieldsPane);
 
         //Primary Stage
         Scene scene = new Scene(mainLayout, 740, 350);

@@ -1,6 +1,6 @@
 package by.bsuir.oop.model.smartphone;
 
-public class Processor {
+class Processor {
 
     public String model;
 
