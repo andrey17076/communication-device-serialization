@@ -41,4 +41,8 @@ public abstract class CommunicationDevice {
     public void setAntenna(AntennaType antenna) {
         this.antenna = antenna;
     }
+
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 }

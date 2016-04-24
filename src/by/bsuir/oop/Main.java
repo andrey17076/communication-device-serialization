@@ -1,5 +1,6 @@
 package by.bsuir.oop;
 
+import by.bsuir.oop.model.CommunicationDevice;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -7,10 +8,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        Controller controller = new Controller();
 
         //Serialization menu controls
         RadioButton binaryRadioButton = new RadioButton("Binary");
@@ -28,24 +30,49 @@ public class Main extends Application {
         saveButton.setMinWidth(90);
         saveButton.setMaxWidth(90);
 
+        //Table for fields
+        TableView fieldsTable = new TableView();
+        fieldsTable.setMinWidth(300);
+        fieldsTable.setMaxWidth(300);
+        fieldsTable.setEditable(true);
+        fieldsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+
+        TableColumn fieldName = new TableColumn("Field Name");
+        fieldName.setMinWidth(200);
+        fieldName.setMaxWidth(200);
+
+        TableColumn fieldValue = new TableColumn("Value");
+        fieldValue.setMinWidth(100);
+        fieldValue.setMaxWidth(100);
+
+        fieldsTable.getColumns().addAll(fieldName, fieldValue);
+
         //List of devices
-        ListView listView = new ListView();
+        ListView<CommunicationDevice> listView = new ListView<>();
         listView.setPrefHeight(Region.USE_COMPUTED_SIZE);
         listView.setMinWidth(300);
         listView.setMaxWidth(300);
+        listView.setOnMousePressed(event -> controller.showDeviceFields(listView.getSelectionModel().getSelectedItem(), fieldName, fieldValue));
 
         //List controls
-        ComboBox devicesComboBox = new ComboBox();
+        ComboBox<Class> devicesComboBox = new ComboBox<>();
         devicesComboBox.setMinWidth(200);
         devicesComboBox.setMaxWidth(200);
+        devicesComboBox.getItems().addAll(controller.getAvailableClasses());
+        devicesComboBox.setConverter(controller.getStringConverter());
+
+        devicesComboBox.getSelectionModel().selectFirst();
 
         Button addButton = new Button("Add");
         addButton.setMinWidth(90);
         addButton.setMaxWidth(90);
+        addButton.setOnMousePressed(event -> controller.addDevice(devicesComboBox.getValue(), listView));
 
         Button deleteButton = new Button("Delete");
         deleteButton.setMinWidth(90);
         deleteButton.setMaxWidth(90);
+        deleteButton.setOnMousePressed(event -> controller.deleteDevices(listView));
 
         //GridPane for control buttons
         GridPane gridPane = new GridPane();
@@ -57,23 +84,6 @@ public class Main extends Application {
         GridPane.setConstraints(addButton, 1, 0);
         GridPane.setConstraints(deleteButton, 1, 1);
         gridPane.getChildren().addAll(devicesComboBox, addButton, deleteButton);
-
-        //Table for fields
-        TableView fieldsTable = new TableView();
-        fieldsTable.setMinWidth(300);
-        fieldsTable.setMaxWidth(300);
-        fieldsTable.setEditable(true);
-        fieldsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        TableColumn fieldName = new TableColumn("Field Name");
-        fieldName.setMinWidth(200);
-        fieldName.setMaxWidth(200);
-
-        TableColumn fieldValue = new TableColumn("Value");
-        fieldValue.setMinWidth(100);
-        fieldValue.setMaxWidth(100);
-
-        fieldsTable.getColumns().addAll(fieldName, fieldValue);
 
         //Menu for Serializers
         VBox serializersMenu = new VBox();
