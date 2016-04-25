@@ -13,22 +13,6 @@ public class View extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //Serialization menu controls
-        RadioButton binaryRadioButton = new RadioButton("Binary");
-        RadioButton xmlRadioButton = new RadioButton("XML");
-        RadioButton textRadioButton = new RadioButton("Text");
-
-        ToggleGroup radioGroup = new ToggleGroup();
-        radioGroup.getToggles().addAll(binaryRadioButton, xmlRadioButton, textRadioButton);
-
-        Button openButton = new Button("Open");
-        openButton.setMinWidth(90);
-        openButton.setMaxWidth(90);
-
-        Button saveButton = new Button("Save");
-        saveButton.setMinWidth(90);
-        saveButton.setMaxWidth(90);
-
         //Pane for device fields
         ScrollPane fieldsPane = new ScrollPane();
         fieldsPane.setMinWidth(300);
@@ -62,7 +46,10 @@ public class View extends Application {
         Button deleteButton = new Button("Delete");
         deleteButton.setMinWidth(90);
         deleteButton.setMaxWidth(90);
-        deleteButton.setOnMousePressed(event -> Controller.deleteDevices(listView));
+        deleteButton.setOnMousePressed(event -> {
+            Controller.deleteDevices(listView);
+            fieldsPane.setContent(null);
+        });
 
         //GridPane for control buttons
         GridPane gridPane = new GridPane();
@@ -74,6 +61,25 @@ public class View extends Application {
         GridPane.setConstraints(addButton, 1, 0);
         GridPane.setConstraints(deleteButton, 1, 1);
         gridPane.getChildren().addAll(devicesComboBox, addButton, deleteButton);
+
+        //Serialization menu controls
+        RadioButton binaryRadioButton = new RadioButton("Binary");
+        RadioButton xmlRadioButton = new RadioButton("XML");
+        RadioButton textRadioButton = new RadioButton("Text");
+
+        ToggleGroup radioGroup = new ToggleGroup();
+        radioGroup.getToggles().addAll(binaryRadioButton, xmlRadioButton, textRadioButton);
+        radioGroup.selectToggle(binaryRadioButton);
+
+        Button openButton = new Button("Open");
+        openButton.setMinWidth(90);
+        openButton.setMaxWidth(90);
+        openButton.setOnAction(event -> Controller.loadFromFile(radioGroup, listView, primaryStage));
+
+        Button saveButton = new Button("Save");
+        saveButton.setMinWidth(90);
+        saveButton.setMaxWidth(90);
+        saveButton.setOnAction(event -> Controller.saveToFile(radioGroup, listView, primaryStage));
 
         //Menu for Serializers
         VBox serializersMenu = new VBox();

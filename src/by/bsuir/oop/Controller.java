@@ -4,10 +4,16 @@ import by.bsuir.oop.helpers.FieldHelper;
 import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.*;
 import by.bsuir.oop.model.smartphone.*;
+import by.bsuir.oop.serializers.BinarySerializer;
+import by.bsuir.oop.serializers.Serializer;
+import by.bsuir.oop.serializers.XMLSerializer;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.*;
 import java.lang.reflect.Field;
 
 public class Controller {
@@ -64,5 +70,65 @@ public class Controller {
     static void deleteDevices(ListView<CommunicationDevice> listView) {
         CommunicationDevice selectedDevice = listView.getSelectionModel().getSelectedItem();
         listView.getItems().remove(selectedDevice);
+    }
+
+    private static Serializer getSerializer(ToggleGroup radioGroup) {
+        RadioButton selectedRButton = (RadioButton) radioGroup.getSelectedToggle();
+        Serializer serializer;
+
+        switch (selectedRButton.getText()) {
+            case "Binary":
+                serializer = new BinarySerializer();
+                break;
+            case "XML":
+                serializer = new XMLSerializer();
+                break;
+            case "Text":
+                serializer = new BinarySerializer(); // TEMPORALLY
+                break;
+            default:
+                serializer = new BinarySerializer();
+        }
+        return serializer;
+    }
+
+    static void saveToFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage) {
+
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            Serializer serializer = getSerializer(radioGroup);
+            Object[] devices = listView.getItems().toArray();
+            try {
+                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+                serializer.serialize(devices, out);
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static void loadFromFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage) {
+
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            Serializer serializer = getSerializer(radioGroup);
+            try {
+                BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+                Object[] devices = (Object[]) serializer.deserialize(in);
+                listView.getItems().clear();
+                for (Object device : devices) {
+                    listView.getItems().add((CommunicationDevice) device);
+                }
+                in.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

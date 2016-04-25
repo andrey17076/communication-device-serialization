@@ -1,6 +1,8 @@
 package by.bsuir.oop.model.smartphone;
 
-public class OperationSystem {
+import java.io.Serializable;
+
+public class OperationSystem implements Serializable {
 
     public String name;
     public String version;

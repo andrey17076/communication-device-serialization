@@ -2,7 +2,7 @@ package by.bsuir.oop.model;
 
 public class CordedStationaryPhone extends StationaryPhone {
 
-    public enum DialerType { DISK, KEYPAD };
+    public enum DialerType { DISK, KEYPAD }
 
     public int cordLength; //in metres;
 

@@ -1,8 +1,10 @@
 package by.bsuir.oop.model;
 
-public abstract class CommunicationDevice {
+import java.io.Serializable;
 
-    public enum AntennaType {FIXED, FOLDING, INTERNAL, REMOVABLE};
+public abstract class CommunicationDevice implements Serializable {
+
+    public enum AntennaType { FIXED, FOLDING, INTERNAL, REMOVABLE }
 
     public String brand;
     public String model;

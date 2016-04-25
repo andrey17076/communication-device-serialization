@@ -1,6 +1,8 @@
 package by.bsuir.oop.model.smartphone;
 
-public class Processor {
+import java.io.Serializable;
+
+public class Processor implements Serializable{
 
     public String model;
 
