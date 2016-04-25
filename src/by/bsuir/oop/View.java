@@ -1,5 +1,6 @@
 package by.bsuir.oop;
 
+import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.CommunicationDevice;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -8,11 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class View extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        Controller controller = new Controller();
 
         //Serialization menu controls
         RadioButton binaryRadioButton = new RadioButton("Binary");
@@ -43,29 +42,27 @@ public class Main extends Application {
         listView.setMaxWidth(300);
         listView.setOnMousePressed(event -> {
             CommunicationDevice selected = listView.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                fieldsPane.setContent(controller.getObjectFieldsEditor(selected));
-            }
+            fieldsPane.setContent(Controller.getObjectFieldsEditor(selected));
         });
 
         //List controls
         ComboBox<Class> devicesComboBox = new ComboBox<>();
         devicesComboBox.setMinWidth(200);
         devicesComboBox.setMaxWidth(200);
-        devicesComboBox.getItems().addAll(controller.getAvailableClasses());
-        devicesComboBox.setConverter(controller.getClassStringConverter());
+        devicesComboBox.getItems().addAll(Controller.getAvailableClasses());
+        devicesComboBox.setConverter(GuiHelper.getClassStringConverter());
 
         devicesComboBox.getSelectionModel().selectFirst();
 
         Button addButton = new Button("Add");
         addButton.setMinWidth(90);
         addButton.setMaxWidth(90);
-        addButton.setOnMousePressed(event -> controller.addDevice(devicesComboBox.getValue(), listView));
+        addButton.setOnMousePressed(event -> Controller.addDevice(devicesComboBox.getValue(), listView));
 
         Button deleteButton = new Button("Delete");
         deleteButton.setMinWidth(90);
         deleteButton.setMaxWidth(90);
-        deleteButton.setOnMousePressed(event -> controller.deleteDevices(listView));
+        deleteButton.setOnMousePressed(event -> Controller.deleteDevices(listView));
 
         //GridPane for control buttons
         GridPane gridPane = new GridPane();
@@ -89,11 +86,11 @@ public class Main extends Application {
         listMenu.setSpacing(10);
         listMenu.getChildren().addAll(listView, gridPane);
 
-        //Main Layout
+        //View Layout
         HBox mainLayout = new HBox();
         mainLayout.setPadding(new Insets(15));
         mainLayout.setSpacing(10);
-        mainLayout.getChildren().addAll(serializersMenu, listMenu, /*fieldsTable*/ fieldsPane);
+        mainLayout.getChildren().addAll(serializersMenu, listMenu, fieldsPane);
 
         //Primary Stage
         Scene scene = new Scene(mainLayout, 740, 350);

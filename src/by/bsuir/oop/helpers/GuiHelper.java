@@ -5,6 +5,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.lang.reflect.Field;
 
@@ -55,5 +56,25 @@ public class GuiHelper {
             fieldHelper.setFieldValue(objectField);
         }
         return Controller.getObjectFieldsEditor(fieldHelper.getFieldValue());
+    }
+
+    public static StringConverter<Class> getClassStringConverter() {
+        return new StringConverter<Class>() {
+            @Override
+            public String toString(Class object) {
+                return object.getSimpleName();
+            }
+
+            @Override
+            public Class fromString(String string) {
+                Class cls = null;
+                try {
+                    cls = Class.forName(string);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return cls;
+            }
+        };
     }
 }
