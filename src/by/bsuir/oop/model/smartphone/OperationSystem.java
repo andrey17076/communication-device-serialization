@@ -1,6 +1,6 @@
 package by.bsuir.oop.model.smartphone;
 
-class OperationSystem {
+public class OperationSystem {
 
     public String name;
     public String version;

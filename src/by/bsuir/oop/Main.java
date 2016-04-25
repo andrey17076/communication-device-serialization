@@ -44,7 +44,7 @@ public class Main extends Application {
         listView.setOnMousePressed(event -> {
             CommunicationDevice selected = listView.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                controller.showDeviceFields(selected, fieldsPane);
+                fieldsPane.setContent(controller.getObjectFieldsEditor(selected));
             }
         });
 

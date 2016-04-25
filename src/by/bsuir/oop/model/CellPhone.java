@@ -6,8 +6,8 @@ public class CellPhone extends Phone {
     public int usageTime;
     public int internalMemory; //in megabytes
 
-    public boolean isHasMemoryCardSupport;
-    public boolean isHasTouchScreen;
+    public boolean hasMemoryCardSupport;
+    public boolean hasTouchScreen;
 
     public int getScreenSize() {
         return screenSize;
@@ -33,20 +33,20 @@ public class CellPhone extends Phone {
         this.internalMemory = internalMemory;
     }
 
-    public boolean isHasMemoryCardSupport() {
-        return isHasMemoryCardSupport;
+    public boolean getHasMemoryCardSupport() {
+        return hasMemoryCardSupport;
     }
 
     public void setHasMemoryCardSupport(boolean hasMemoryCardSupport) {
-        isHasMemoryCardSupport = hasMemoryCardSupport;
+        this.hasMemoryCardSupport = hasMemoryCardSupport;
     }
 
-    public boolean isHasTouchScreen() {
-        return isHasTouchScreen;
+    public boolean getHasTouchScreen() {
+        return hasTouchScreen;
     }
 
     public void setHasTouchScreen(boolean hasTouchScreen) {
-        isHasTouchScreen = hasTouchScreen;
+        this.hasTouchScreen = hasTouchScreen;
     }
 
 }

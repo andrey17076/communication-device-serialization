@@ -2,25 +2,25 @@ package by.bsuir.oop.model;
 
 public abstract class StationaryPhone extends Phone {
 
-    public boolean isHasCallerID;
-    public boolean isHasAnsweringSystem;
+    public boolean hasCallerID;
+    public boolean hasAnsweringSystem;
 
     private int phoneBookMemory; // in phone numbers;
 
-    public boolean isHasCallerID() {
-        return isHasCallerID;
+    public boolean getHasCallerID() {
+        return hasCallerID;
     }
 
     public void setHasCallerID(boolean hasCallerID) {
-        isHasCallerID = hasCallerID;
+        this.hasCallerID = hasCallerID;
     }
 
-    public boolean isHasAnsweringSystem() {
-        return isHasAnsweringSystem;
+    public boolean getHasAnsweringSystem() {
+        return hasAnsweringSystem;
     }
 
     public void setHasAnsweringSystem(boolean hasAnsweringSystem) {
-        isHasAnsweringSystem = hasAnsweringSystem;
+        this.hasAnsweringSystem = hasAnsweringSystem;
     }
 
     public int getPhoneBookMemory() {

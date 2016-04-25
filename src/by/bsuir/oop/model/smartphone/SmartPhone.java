@@ -5,7 +5,7 @@ import by.bsuir.oop.model.CellPhone;
 public class SmartPhone extends CellPhone {
 
     public Processor processor;
-    public OperationSystem os;
+    public OperationSystem operationSystem;
 
     public Processor getProcessor() {
         return processor;
@@ -15,11 +15,11 @@ public class SmartPhone extends CellPhone {
         this.processor = processor;
     }
 
-    public OperationSystem getOs() {
-        return os;
+    public OperationSystem getOperationSystem() {
+        return operationSystem;
     }
 
-    public void setOs(OperationSystem os) {
-        this.os = os;
+    public void setOperationSystem(OperationSystem os) {
+        this.operationSystem = os;
     }
 }

@@ -2,22 +2,22 @@ package by.bsuir.oop.model;
 
 public abstract class Phone extends CommunicationDevice {
 
-    public boolean isHasJack;
-    public boolean isHasSpeakerphone;
+    public boolean hasJack;
+    public boolean hasSpeakerphone;
 
-    public boolean isHasJack() {
-        return isHasJack;
+    public boolean getHasJack() {
+        return hasJack;
     }
 
     public void setHasJack(boolean hasJack) {
-        isHasJack = hasJack;
+        this.hasJack = hasJack;
     }
 
-    public boolean isHasSpeakerphone() {
-        return isHasSpeakerphone;
+    public boolean getHasSpeakerphone() {
+        return hasSpeakerphone;
     }
 
     public void setHasSpeakerphone(boolean hasSpeakerphone) {
-        isHasSpeakerphone = hasSpeakerphone;
+        this.hasSpeakerphone = hasSpeakerphone;
     }
 }

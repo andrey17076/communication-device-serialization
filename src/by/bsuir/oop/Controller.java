@@ -1,17 +1,14 @@
 package by.bsuir.oop;
 
 import by.bsuir.oop.model.*;
-import by.bsuir.oop.model.smartphone.SmartPhone;
-import com.sun.tools.javac.code.Attribute;
+import by.bsuir.oop.model.smartphone.*;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class Controller {
@@ -19,26 +16,7 @@ public class Controller {
     private Class[] availableClasses = { Radio.class, CordedStationaryPhone.class, CordlessStationaryPhone.class, CellPhone.class, SmartPhone.class };
     private ArrayList<Object> devices = new ArrayList<>();
 
-    public StringConverter<Class> getClassStringConverter() {
-        return new StringConverter<Class>() {
-            @Override
-            public String toString(Class object) {
-                return object.getSimpleName();
-            }
-
-            @Override
-            public Class fromString(String string) {
-                try {
-                    return Class.forName(string);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        };
-    }
-
-    public void showDeviceFields(CommunicationDevice device, ScrollPane fieldsPane) {
+    public VBox getObjectFieldsEditor(Object object) {
 
         VBox fieldsBox = new VBox();
         fieldsBox.setMinWidth(300);
@@ -46,93 +24,57 @@ public class Controller {
         fieldsBox.setPadding(new Insets(15));
         fieldsBox.setSpacing(10);
 
-        Field[] fields = device.getClass().getFields();
+        Field[] fields = object.getClass().getFields();
 
         for (Field field: fields) {
-
-            HBox fieldBox = new HBox();
-            fieldBox.setSpacing(10);
-
-            Label fieldLabel = new Label(field.getName());
-            fieldLabel.setMinHeight(27);
-            fieldBox.getChildren().add(fieldLabel);
-
-            Class fieldType = field.getType();
+            FieldHelper fieldHelper = new FieldHelper(object, field);
+            Label fieldLabel = new Label(fieldHelper.getFieldName());
 
             try {
-                String fieldName = field.getName();
-                Method getMethod;
 
-                if (fieldType.equals(int.class)) {
+                if (fieldHelper.isIntField() || fieldHelper.isStringField()) {
                     TextField fieldEdit = new TextField();
-                    getMethod = device.getClass().getMethod("get"+Character.toUpperCase(fieldName.charAt(0))+fieldName.substring(1));
-                    fieldEdit.setText(Integer.toString((Integer) getMethod.invoke(device)));
-                    fieldBox.getChildren().add(fieldEdit);
-                    fieldEdit.setOnKeyReleased(event -> {
-                        try {
-                            Method setMethod = device.getClass().getMethod("set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1), fieldType);
-                            setMethod.invoke(device, Integer.parseInt(fieldEdit.getText()));
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
-                    });
 
-                } else if (fieldType.equals(String.class)) {
-                    TextField fieldEdit = new TextField();
-                    getMethod = device.getClass().getMethod("get"+Character.toUpperCase(fieldName.charAt(0))+fieldName.substring(1));
-                    fieldEdit.setText((String) getMethod.invoke(device));
-                    fieldBox.getChildren().add(fieldEdit);
-                    fieldEdit.setOnKeyReleased(event -> {
-                        try {
-                            Method setMethod = device.getClass().getMethod("set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1), fieldType);
-                            setMethod.invoke(device, fieldEdit.getText());
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
-                    });
-
-                } else if (fieldType.equals(boolean.class)) {
-                    CheckBox fieldCheckBox = new CheckBox();
-                    fieldCheckBox.setMinHeight(24);
-                    getMethod = device.getClass().getMethod(fieldName);
-                    fieldCheckBox.setSelected((boolean) getMethod.invoke(device));
-                    fieldBox.getChildren().add(fieldCheckBox);
-                    fieldCheckBox.setOnMouseReleased(event -> {
-                        try {
-                            Method setMethod = device.getClass().getMethod("set" + fieldName.substring(2), fieldType);
-                            setMethod.invoke(device, fieldCheckBox.isSelected());
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
-                    });
-
-                } else if (fieldType.isEnum()) {
-                    ComboBox<Enum> fieldComboBox = new ComboBox<>();
-                    Field[] enumFields = field.getType().getFields();
-                    for (Field enumField : enumFields) {
-                        fieldComboBox.getItems().add(Enum.valueOf(fieldType, enumField.getName()));
+                    if (fieldHelper.isIntField()) {
+                        fieldEdit.setText(Integer.toString((Integer) fieldHelper.getFieldValue()));
+                        fieldEdit.setOnKeyReleased(event -> fieldHelper.setFieldValue(Integer.parseInt(fieldEdit.getText())));
+                    } else {
+                        fieldEdit.setText((String) fieldHelper.getFieldValue());
+                        fieldEdit.setOnKeyReleased(event -> fieldHelper.setFieldValue(fieldEdit.getText()));
                     }
+                    fieldsBox.getChildren().addAll(fieldLabel, fieldEdit);
 
-                    getMethod = device.getClass().getMethod("get"+Character.toUpperCase(fieldName.charAt(0))+fieldName.substring(1));
-                    fieldComboBox.getSelectionModel().select((Enum) getMethod.invoke(device));
+                } else if (fieldHelper.isBooleanField()) {
 
-                    fieldBox.getChildren().add(fieldComboBox);
-                    fieldComboBox.setOnAction(event -> {
-                        try {
-                            Method setMethod = device.getClass().getMethod("set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1), fieldType);
-                            setMethod.invoke(device, fieldComboBox.getSelectionModel().getSelectedItem());
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    CheckBox fieldCheckBox = new CheckBox();
+                    fieldCheckBox.setSelected((boolean) fieldHelper.getFieldValue());
+                    fieldCheckBox.setOnMouseReleased(event -> fieldHelper.setFieldValue(fieldCheckBox.isSelected()));
+                    fieldsBox.getChildren().addAll(fieldLabel, fieldCheckBox);
+
+                } else if (fieldHelper.isEnumField()) {
+
+                    ComboBox<Enum> fieldComboBox = new ComboBox<>();
+                    Field[] enumFields = fieldHelper.getFieldType().getFields();
+                    for (Field enumField : enumFields) {
+                        fieldComboBox.getItems().add(Enum.valueOf(fieldHelper.getFieldType(), enumField.getName()));
+                    }
+                    fieldComboBox.getSelectionModel().select((Enum) fieldHelper.getFieldValue());
+                    fieldComboBox.setOnAction(event -> fieldHelper.setFieldValue(fieldComboBox.getSelectionModel().getSelectedItem()));
+                    fieldsBox.getChildren().addAll(fieldLabel, fieldComboBox);
+
+                } else {
+
+                    if (fieldHelper.getFieldValue() == null) {
+                        Object objectField = fieldHelper.getFieldType().newInstance();
+                        fieldHelper.setFieldValue(objectField);
+                    }
+                    fieldsBox.getChildren().addAll(fieldLabel, getObjectFieldsEditor(fieldHelper.getFieldValue()));
                 }
-                fieldsBox.getChildren().addAll(fieldBox);
-
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            } catch ( IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }
-        fieldsPane.setContent(fieldsBox);
+        return fieldsBox;
     }
 
     public void addDevice(Class cls, ListView<CommunicationDevice> listView) {
@@ -158,4 +100,22 @@ public class Controller {
         return availableClasses;
     }
 
+    public StringConverter<Class> getClassStringConverter() {
+        return new StringConverter<Class>() {
+            @Override
+            public String toString(Class object) {
+                return object.getSimpleName();
+            }
+
+            @Override
+            public Class fromString(String string) {
+                try {
+                    return Class.forName(string);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
 }

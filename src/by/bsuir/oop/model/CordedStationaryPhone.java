@@ -6,8 +6,8 @@ public class CordedStationaryPhone extends StationaryPhone {
 
     public int cordLength; //in metres;
 
-    public boolean isWallMountable;
-    public boolean isHasHandSetKeyboard;
+    public boolean hasWallMounts;
+    public boolean hasHandSetKeyboard;
 
     public DialerType dialer;
 
@@ -19,20 +19,20 @@ public class CordedStationaryPhone extends StationaryPhone {
         this.cordLength = cordLength;
     }
 
-    public boolean isWallMountable() {
-        return isWallMountable;
+    public boolean getHasWallMounts() {
+        return hasWallMounts;
     }
 
-    public void setWallMountable(boolean wallMountable) {
-        isWallMountable = wallMountable;
+    public void setHasWallMounts(boolean hasWallMounts) {
+        this.hasWallMounts = hasWallMounts;
     }
 
-    public boolean isHasHandSetKeyboard() {
-        return isHasHandSetKeyboard;
+    public boolean getHasHandSetKeyboard() {
+        return hasHandSetKeyboard;
     }
 
     public void setHasHandSetKeyboard(boolean hasHandSetKeyboard) {
-        isHasHandSetKeyboard = hasHandSetKeyboard;
+        this.hasHandSetKeyboard = hasHandSetKeyboard;
     }
 
     public DialerType getDialer() {
