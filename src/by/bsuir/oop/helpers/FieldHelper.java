@@ -1,4 +1,4 @@
-package by.bsuir.oop;
+package by.bsuir.oop.helpers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
