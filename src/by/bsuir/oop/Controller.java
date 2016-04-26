@@ -6,6 +6,7 @@ import by.bsuir.oop.model.*;
 import by.bsuir.oop.model.smartphone.*;
 import by.bsuir.oop.serializers.BinarySerializer;
 import by.bsuir.oop.serializers.Serializer;
+import by.bsuir.oop.serializers.TextSerializer;
 import by.bsuir.oop.serializers.XMLSerializer;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -62,6 +63,8 @@ public class Controller {
             CommunicationDevice device;
             device = (CommunicationDevice) cls.newInstance();
             listView.getItems().add(device);
+            listView.getSelectionModel().getSelectedItem();
+            listView.getSelectionModel().select(device);
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -84,7 +87,7 @@ public class Controller {
                 serializer = new XMLSerializer();
                 break;
             case "Text":
-                serializer = new BinarySerializer(); // TEMPORALLY
+                serializer = new TextSerializer();
                 break;
             default:
                 serializer = new BinarySerializer();
@@ -126,7 +129,7 @@ public class Controller {
                     listView.getItems().add((CommunicationDevice) device);
                 }
                 in.close();
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

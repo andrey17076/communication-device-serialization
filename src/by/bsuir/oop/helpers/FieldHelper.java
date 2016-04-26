@@ -68,4 +68,8 @@ public class FieldHelper {
     public boolean isEnumField() {
         return fieldType.isEnum();
     }
+
+    public boolean isPrimitive() {
+        return isBooleanField() | isIntField() | isEnumField() | isStringField();
+    }
 }

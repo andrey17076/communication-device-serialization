@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -41,7 +42,10 @@ public class View extends Application {
         Button addButton = new Button("Add");
         addButton.setMinWidth(90);
         addButton.setMaxWidth(90);
-        addButton.setOnMousePressed(event -> Controller.addDevice(devicesComboBox.getValue(), listView));
+        addButton.setOnMousePressed(event -> {
+            Controller.addDevice(devicesComboBox.getValue(), listView);
+            listView.fireEvent(event);
+        });
 
         Button deleteButton = new Button("Delete");
         deleteButton.setMinWidth(90);
