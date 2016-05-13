@@ -4,9 +4,9 @@ import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.CommunicationDevice;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -78,17 +78,32 @@ public class View extends Application {
         Button openButton = new Button("Open");
         openButton.setMinWidth(90);
         openButton.setMaxWidth(90);
-        openButton.setOnAction(event -> Controller.loadFromFile(radioGroup, listView, primaryStage));
+        openButton.setOnAction(event -> {
+            Controller.loadFromFile(radioGroup, listView, primaryStage);
+            fieldsPane.setContent(null);
+        });
 
         Button saveButton = new Button("Save");
         saveButton.setMinWidth(90);
         saveButton.setMaxWidth(90);
-        saveButton.setOnAction(event -> Controller.saveToFile(radioGroup, listView, primaryStage));
+        saveButton.setOnAction(event -> {
+            Controller.saveToFile(radioGroup, listView, primaryStage);
+            fieldsPane.setContent(null);
+        });
+
+        //Plugin menu
+        VBox pluginMenu = new VBox();
+        pluginMenu.setSpacing(10);
+        Separator separator = new Separator(Orientation.HORIZONTAL);
+        Label pluginLabel = new Label("Pack before with:");
+//        ComboBox<Packer> packerComboBox = GuiHelper.constructPackerComboBox();
+//        pluginMenu.getChildren().addAll(separator, pluginLabel, packerComboBox);
+
 
         //Menu for Serializers
         VBox serializersMenu = new VBox();
         serializersMenu.setSpacing(10);
-        serializersMenu.getChildren().addAll(binaryRadioButton, xmlRadioButton, textRadioButton, openButton, saveButton);
+        serializersMenu.getChildren().addAll(binaryRadioButton, xmlRadioButton, textRadioButton, openButton, saveButton, pluginMenu);
 
         //Communication devices list editing menu
         VBox listMenu = new VBox();

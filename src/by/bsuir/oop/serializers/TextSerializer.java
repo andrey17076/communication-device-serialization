@@ -52,11 +52,11 @@ public class TextSerializer implements Serializer {
 
             return deviceArray;
         } else {
-            return null;
+            return readObject(stringTokenizer);
         }
     }
 
-    public Object readObject(StringTokenizer stringTokenizer) {
+    public static Object readObject(StringTokenizer stringTokenizer) {
 
         Object object = null;
 
