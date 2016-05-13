@@ -1,13 +1,20 @@
 package by.bsuir.oop.helpers;
 
 import by.bsuir.oop.Controller;
+import by.bsuir.oop.packer.Packer;
+import by.bsuir.oop.packer.PackerLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
+import java.io.File;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 
 public class GuiHelper {
 
@@ -56,6 +63,18 @@ public class GuiHelper {
             fieldHelper.setFieldValue(objectField);
         }
         return Controller.getObjectFieldsEditor(fieldHelper.getFieldValue());
+    }
+
+    public static ComboBox<Packer> constructPackerComboBox() {
+        ComboBox<Packer> packerComboBox= new ComboBox<>();
+        packerComboBox.setMinWidth(120);
+        packerComboBox.setMaxWidth(120);
+        packerComboBox.getItems().add(new Packer());
+        ArrayList<Packer> packers = PackerLoader.getPackers();
+        for (Packer packer : packers)
+            packerComboBox.getItems().add(packer);
+
+        return packerComboBox;
     }
 
     public static StringConverter<Class> getClassStringConverter() {

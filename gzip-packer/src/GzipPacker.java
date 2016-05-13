@@ -1,4 +1,4 @@
-import by.bsuir.oop.plugins.Packer;
+import by.bsuir.oop.packer.Packer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,14 +6,16 @@ import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class GzipPacker implements Packer {
+public class GzipPacker extends Packer {
 
-    @Override
+    public GzipPacker() {
+        this.extension = "gzip";
+    }
+
     public void compress(InputStream in, OutputStream out) throws IOException {
-        GZIPInputStream zin = new GZIPInputStream(in);
 
-        final int BUFFER = 2048;
         byte buffer[] = new byte[BUFFER];
+        GZIPInputStream zin = new GZIPInputStream(in);
 
         int size;
         while ((size = zin.read(buffer, 0, buffer.length)) != -1) {
@@ -21,9 +23,8 @@ public class GzipPacker implements Packer {
         }
     }
 
-    @Override
     public void decompress(InputStream in, OutputStream out) throws IOException {
-        final int BUFFER = 2048;
+
         byte buffer[] = new byte[BUFFER];
         GZIPOutputStream zos = new GZIPOutputStream(out);
 

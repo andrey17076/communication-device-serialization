@@ -2,6 +2,8 @@ package by.bsuir.oop;
 
 import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.CommunicationDevice;
+import by.bsuir.oop.packer.Packer;
+import by.bsuir.oop.packer.PackerLoader;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -9,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public class View extends Application {
     @Override
@@ -96,8 +100,9 @@ public class View extends Application {
         pluginMenu.setSpacing(10);
         Separator separator = new Separator(Orientation.HORIZONTAL);
         Label pluginLabel = new Label("Pack before with:");
-//        ComboBox<Packer> packerComboBox = GuiHelper.constructPackerComboBox();
-//        pluginMenu.getChildren().addAll(separator, pluginLabel, packerComboBox);
+        ComboBox<Packer> packerComboBox = GuiHelper.constructPackerComboBox();
+        packerComboBox.getSelectionModel().selectFirst();
+        pluginMenu.getChildren().addAll(separator, pluginLabel, packerComboBox);
 
 
         //Menu for Serializers
@@ -118,8 +123,8 @@ public class View extends Application {
         mainLayout.getChildren().addAll(serializersMenu, listMenu, fieldsPane);
 
         //Primary Stage
-        Scene scene = new Scene(mainLayout, 740, 350);
-        primaryStage.setMinWidth(740);
+        Scene scene = new Scene(mainLayout, 770, 350);
+        primaryStage.setMinWidth(770);
         primaryStage.setMinHeight(350);
         primaryStage.setTitle("Communication Devices");
         primaryStage.setScene(scene);
@@ -127,6 +132,11 @@ public class View extends Application {
     }
 
     public static void main(String[] args) {
+
+        File dir = new File(PackerLoader.pluginsDir);
+        if (!dir.exists())
+            dir.mkdir();
+
         launch(args);
     }
 }

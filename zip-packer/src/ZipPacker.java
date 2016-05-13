@@ -1,4 +1,4 @@
-import by.bsuir.oop.plugins.Packer;
+import by.bsuir.oop.packer.Packer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,15 +7,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-class ZipPacker implements Packer {
+public class ZipPacker extends Packer {
     private final String ENTRY_NAME = "list";
 
-    @Override
+    public ZipPacker() {
+        this.extension = "zip";
+    }
+
     public void compress(InputStream in, OutputStream out) throws IOException {
-        final int BUFFER = 2048;
         byte buffer[] = new byte[BUFFER];
         ZipOutputStream zos = new ZipOutputStream(out);
         zos.putNextEntry(new ZipEntry(ENTRY_NAME));
+
         int length;
         while ((length = in.read(buffer)) > 0) {
             zos.write(buffer, 0, length);
@@ -24,7 +27,6 @@ class ZipPacker implements Packer {
         zos.close();
     }
 
-    @Override
     public void decompress(InputStream in, OutputStream out) throws IOException {
         ZipInputStream zin = new ZipInputStream(in);
         ZipEntry entry;
