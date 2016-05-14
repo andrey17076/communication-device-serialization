@@ -100,16 +100,10 @@ public class Controller {
     static void saveToFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage, ComboBox packerComboBox) {
 
         FileChooser fileChooser = new FileChooser();
-        File tmpFile = fileChooser.showSaveDialog(stage);
         Packer packer = (Packer) packerComboBox.getSelectionModel().getSelectedItem();
-
-        File file = new File(tmpFile.getParent(), tmpFile.getName() + "." + packer.getExtension());
-
-        try {
-            Files.move(tmpFile.toPath(), file.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File tmpFile = fileChooser.showSaveDialog(stage);
+        File file = new File(tmpFile.getParent(), tmpFile.getName() + packer.getExtension());
+        file.renameTo(tmpFile);
 
         Serializer serializer = getSerializer(radioGroup);
         Object[] devices = listView.getItems().toArray();

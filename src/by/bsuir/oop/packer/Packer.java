@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 public class Packer {
     protected static int BUFFER = 2048;
-    protected String extension = ""; // default value
+    protected String extension = "none"; // default value
 
     public void compress(InputStream in, OutputStream out) throws IOException {
 
@@ -29,13 +29,13 @@ public class Packer {
     }
 
     public String getExtension() {
-        return extension;
+        if (extension.equals("none"))
+            return "";
+        else
+            return "." + extension;
     }
 
     public String toString() {
-        if (extension.equals(""))
-            return "None";
-        else
-            return Character.toUpperCase(extension.charAt(0)) + extension.substring(1);
+        return Character.toUpperCase(extension.charAt(0)) + extension.substring(1);
     }
 }
