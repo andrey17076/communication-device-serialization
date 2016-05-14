@@ -4,6 +4,7 @@ import by.bsuir.oop.helpers.FieldHelper;
 import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.*;
 import by.bsuir.oop.model.smartphone.*;
+import by.bsuir.oop.packer.Packer;
 import by.bsuir.oop.serializers.BinarySerializer;
 import by.bsuir.oop.serializers.Serializer;
 import by.bsuir.oop.serializers.TextSerializer;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 
 public class Controller {
 
@@ -95,35 +97,48 @@ public class Controller {
         return serializer;
     }
 
-    static void saveToFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage) {
+    static void saveToFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage, ComboBox packerComboBox) {
 
         FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showSaveDialog(stage);
+        File tmpFile = fileChooser.showSaveDialog(stage);
+        Packer packer = (Packer) packerComboBox.getSelectionModel().getSelectedItem();
 
-        if (file != null) {
-            Serializer serializer = getSerializer(radioGroup);
-            Object[] devices = listView.getItems().toArray();
-            try {
-                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-                serializer.serialize(devices, out);
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        File file = new File(tmpFile.getParent(), tmpFile.getName() + "." + packer.getExtension());
+
+        try {
+            Files.move(tmpFile.toPath(), file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Serializer serializer = getSerializer(radioGroup);
+        Object[] devices = listView.getItems().toArray();
+        try {
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+            ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
+            serializer.serialize(devices, tmpOutputStream);
+            packer.compress(new ByteArrayInputStream(tmpOutputStream.toByteArray()), out);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     @SuppressWarnings("unchecked")
-    static void loadFromFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage) {
+    static void loadFromFile(ToggleGroup radioGroup, ListView<CommunicationDevice> listView, Stage stage, ComboBox packerComboBox) {
 
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
+        Packer packer = (Packer) packerComboBox.getSelectionModel().getSelectedItem();
 
         if (file != null) {
             Serializer serializer = getSerializer(radioGroup);
             try {
+                ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
                 BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-                Object[] devices = (Object[]) serializer.deserialize(in);
+                packer.decompress(in, tmpOutputStream);
+
+                Object[] devices = (Object[]) serializer.deserialize(new ByteArrayInputStream(tmpOutputStream.toByteArray()));
                 listView.getItems().clear();
                 for (Object device : devices) {
                     listView.getItems().add((CommunicationDevice) device);

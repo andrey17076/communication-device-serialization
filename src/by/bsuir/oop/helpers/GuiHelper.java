@@ -9,11 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 public class GuiHelper {
@@ -23,7 +19,14 @@ public class GuiHelper {
 
         if (fieldHelper.isIntField()) {
             fieldEdit.setText(Integer.toString((Integer) fieldHelper.getFieldValue()));
-            fieldEdit.setOnKeyReleased(event -> fieldHelper.setFieldValue(Integer.parseInt(fieldEdit.getText())));
+            fieldEdit.setOnKeyReleased(event -> {
+                try {
+                    fieldHelper.setFieldValue(Integer.parseInt(fieldEdit.getText()));
+                } catch (NumberFormatException e) {
+                    fieldHelper.setFieldValue(0);
+                }
+            });
+
         } else {
             fieldEdit.setText((String) fieldHelper.getFieldValue());
             fieldEdit.setOnKeyReleased(event -> fieldHelper.setFieldValue(fieldEdit.getText()));

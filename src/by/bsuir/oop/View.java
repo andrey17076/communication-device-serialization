@@ -70,6 +70,15 @@ public class View extends Application {
         GridPane.setConstraints(deleteButton, 1, 1);
         gridPane.getChildren().addAll(devicesComboBox, addButton, deleteButton);
 
+        //Plugin menu
+        VBox pluginMenu = new VBox();
+        pluginMenu.setSpacing(10);
+        Separator separator = new Separator(Orientation.HORIZONTAL);
+        Label pluginLabel = new Label("Pack before with:");
+        ComboBox<Packer> packerComboBox = GuiHelper.constructPackerComboBox();
+        packerComboBox.getSelectionModel().selectFirst();
+        pluginMenu.getChildren().addAll(separator, pluginLabel, packerComboBox);
+
         //Serialization menu controls
         RadioButton binaryRadioButton = new RadioButton("Binary");
         RadioButton xmlRadioButton = new RadioButton("XML");
@@ -83,7 +92,7 @@ public class View extends Application {
         openButton.setMinWidth(90);
         openButton.setMaxWidth(90);
         openButton.setOnAction(event -> {
-            Controller.loadFromFile(radioGroup, listView, primaryStage);
+            Controller.loadFromFile(radioGroup, listView, primaryStage, packerComboBox);
             fieldsPane.setContent(null);
         });
 
@@ -91,19 +100,9 @@ public class View extends Application {
         saveButton.setMinWidth(90);
         saveButton.setMaxWidth(90);
         saveButton.setOnAction(event -> {
-            Controller.saveToFile(radioGroup, listView, primaryStage);
+            Controller.saveToFile(radioGroup, listView, primaryStage, packerComboBox);
             fieldsPane.setContent(null);
         });
-
-        //Plugin menu
-        VBox pluginMenu = new VBox();
-        pluginMenu.setSpacing(10);
-        Separator separator = new Separator(Orientation.HORIZONTAL);
-        Label pluginLabel = new Label("Pack before with:");
-        ComboBox<Packer> packerComboBox = GuiHelper.constructPackerComboBox();
-        packerComboBox.getSelectionModel().selectFirst();
-        pluginMenu.getChildren().addAll(separator, pluginLabel, packerComboBox);
-
 
         //Menu for Serializers
         VBox serializersMenu = new VBox();
