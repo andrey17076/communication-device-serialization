@@ -99,7 +99,7 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         Packer packer = (Packer) packerComboBox.getSelectionModel().getSelectedItem();
 
-        SerializerProxy serializerProxy = new SerializerProxy(packer, getSerializer(radioGroup));
+        SerializerAdapter serializerAdapter = new SerializerAdapter(packer, getSerializer(radioGroup));
 
         File tmpFile = fileChooser.showSaveDialog(stage);
         File file = new File(tmpFile.getParent(), tmpFile.getName() + packer.getExtension());
@@ -108,7 +108,7 @@ public class Controller {
         Object[] devices = listView.getItems().toArray();
         try {
             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-            serializerProxy.serialize(devices, out);
+            serializerAdapter.serialize(devices, out);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -138,12 +138,12 @@ public class Controller {
             //file with no extension
         }
 
-        SerializerProxy serializerProxy = new SerializerProxy(packer, getSerializer(radioGroup));
+        SerializerAdapter serializerAdapter = new SerializerAdapter(packer, getSerializer(radioGroup));
 
         try {
 
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-            Object[] devices = (Object[]) serializerProxy.deserialize(in);
+            Object[] devices = (Object[]) serializerAdapter.deserialize(in);
 
             listView.getItems().clear();
             for (Object device : devices) {

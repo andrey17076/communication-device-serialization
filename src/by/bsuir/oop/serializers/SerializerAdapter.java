@@ -4,12 +4,12 @@ import by.bsuir.oop.packer.Packer;
 
 import java.io.*;
 
-public class SerializerProxy implements Serializer {
+public class SerializerAdapter implements Serializer {
 
     Packer packer;
     Serializer serializer;
 
-    public SerializerProxy(Packer packer, Serializer serializer) {
+    public SerializerAdapter(Packer packer, Serializer serializer) {
         this.packer = packer;
         this.serializer = serializer;
     }
