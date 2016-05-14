@@ -1,6 +1,7 @@
 package by.bsuir.oop.helpers;
 
 import by.bsuir.oop.Controller;
+import by.bsuir.oop.packer.DefaultPacker;
 import by.bsuir.oop.packer.Packer;
 import by.bsuir.oop.packer.PackerLoader;
 import javafx.scene.control.CheckBox;
@@ -72,7 +73,7 @@ public class GuiHelper {
         ComboBox<Packer> packerComboBox= new ComboBox<>();
         packerComboBox.setMinWidth(120);
         packerComboBox.setMaxWidth(120);
-        packerComboBox.getItems().add(new Packer());
+        packerComboBox.getItems().add(new DefaultPacker());
         ArrayList<Packer> packers = PackerLoader.getPackers();
         for (Packer packer : packers)
             packerComboBox.getItems().add(packer);

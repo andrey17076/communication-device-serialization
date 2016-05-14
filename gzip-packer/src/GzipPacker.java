@@ -12,6 +12,7 @@ public class GzipPacker extends Packer {
         this.extension = "gzip";
     }
 
+    @Override
     public void compress(InputStream in, OutputStream out) throws IOException {
         byte buffer[] = new byte[BUFFER];
         GZIPOutputStream zos = new GZIPOutputStream(out);
@@ -23,6 +24,7 @@ public class GzipPacker extends Packer {
         zos.close();
     }
 
+    @Override
     public void decompress(InputStream in, OutputStream out) throws IOException {
         byte buffer[] = new byte[BUFFER];
         GZIPInputStream zin = new GZIPInputStream(in);

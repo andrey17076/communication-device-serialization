@@ -14,6 +14,7 @@ public class ZipPacker extends Packer {
         this.extension = "zip";
     }
 
+    @Override
     public void compress(InputStream in, OutputStream out) throws IOException {
         byte buffer[] = new byte[BUFFER];
         ZipOutputStream zos = new ZipOutputStream(out);
@@ -27,6 +28,7 @@ public class ZipPacker extends Packer {
         zos.close();
     }
 
+    @Override
     public void decompress(InputStream in, OutputStream out) throws IOException {
         ZipInputStream zin = new ZipInputStream(in);
         ZipEntry entry;
