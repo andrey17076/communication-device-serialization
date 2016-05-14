@@ -4,6 +4,17 @@ import java.io.*;
 
 public class BinarySerializer implements Serializer {
 
+    private static BinarySerializer instance;
+
+    private BinarySerializer() {}
+
+    public static BinarySerializer getInstance() {
+        if (instance == null) {
+                instance = new BinarySerializer();
+        }
+        return instance;
+    }
+
     @Override
     public void serialize(Object o, OutputStream outputStream) {
         try {

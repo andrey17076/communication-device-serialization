@@ -5,10 +5,7 @@ import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.*;
 import by.bsuir.oop.model.smartphone.*;
 import by.bsuir.oop.packer.Packer;
-import by.bsuir.oop.serializers.BinarySerializer;
-import by.bsuir.oop.serializers.Serializer;
-import by.bsuir.oop.serializers.TextSerializer;
-import by.bsuir.oop.serializers.XMLSerializer;
+import by.bsuir.oop.serializers.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -17,7 +14,6 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
 import java.util.Iterator;
 
 public class Controller {
@@ -84,16 +80,16 @@ public class Controller {
 
         switch (selectedRButton.getText()) {
             case "Binary":
-                serializer = new BinarySerializer();
+                serializer = BinarySerializer.getInstance();
                 break;
             case "XML":
-                serializer = new XMLSerializer();
+                serializer = XMLSerializer.getInstance();
                 break;
             case "Text":
-                serializer = new TextSerializer();
+                serializer = TextSerializer.getInstance();
                 break;
             default:
-                serializer = new BinarySerializer();
+                serializer = BinarySerializer.getInstance();
         }
         return serializer;
     }
@@ -102,21 +98,21 @@ public class Controller {
 
         FileChooser fileChooser = new FileChooser();
         Packer packer = (Packer) packerComboBox.getSelectionModel().getSelectedItem();
+
+        SerializerProxy serializerProxy = new SerializerProxy(packer, getSerializer(radioGroup));
+
         File tmpFile = fileChooser.showSaveDialog(stage);
         File file = new File(tmpFile.getParent(), tmpFile.getName() + packer.getExtension());
         file.renameTo(tmpFile);
 
-        Serializer serializer = getSerializer(radioGroup);
         Object[] devices = listView.getItems().toArray();
         try {
             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-            ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
-            serializer.serialize(devices, tmpOutputStream);
-            packer.compress(new ByteArrayInputStream(tmpOutputStream.toByteArray()), out);
+            serializerProxy.serialize(devices, out);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } //TODO
     }
 
     @SuppressWarnings("unchecked")
@@ -125,26 +121,30 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
         String fileName = file.getName();
-        String fileExtension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-
+        String fileExtension;
         Packer packer = (Packer) packerComboBox.getItems().get(0); //get none packer
 
-        Iterator availablePackers = packerComboBox.getItems().iterator();
-        while (availablePackers.hasNext()) {
-            Packer tmpPacker = (Packer) availablePackers.next();
-            if (tmpPacker.getExtension().equals(fileExtension)) {
-                packer = tmpPacker;
-                break;
+        try {
+            fileExtension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+            Iterator availablePackers = packerComboBox.getItems().iterator();
+            while (availablePackers.hasNext()) {
+                Packer tmpPacker = (Packer) availablePackers.next();
+                if (tmpPacker.getExtension().equals(fileExtension)) {
+                    packer = tmpPacker;
+                    break;
+                }
             }
+        } catch (StringIndexOutOfBoundsException e) {
+            //file with no extension
         }
 
-        Serializer serializer = getSerializer(radioGroup);
-        try {
-            ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-            packer.decompress(in, tmpOutputStream);
+        SerializerProxy serializerProxy = new SerializerProxy(packer, getSerializer(radioGroup));
 
-            Object[] devices = (Object[]) serializer.deserialize(new ByteArrayInputStream(tmpOutputStream.toByteArray()));
+        try {
+
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+            Object[] devices = (Object[]) serializerProxy.deserialize(in);
+
             listView.getItems().clear();
             for (Object device : devices) {
                 listView.getItems().add((CommunicationDevice) device);

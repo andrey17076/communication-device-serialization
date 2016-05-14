@@ -22,6 +22,18 @@ public class TextSerializer implements Serializer {
 
     private static int nestingLevel;
 
+
+    private static TextSerializer instance;
+
+    private TextSerializer() {}
+
+    public static TextSerializer getInstance() {
+        if (instance == null) {
+            instance = new TextSerializer();
+        }
+        return instance;
+    }
+
     @Override
     public void serialize(Object o, OutputStream outputStream) {
         try {
