@@ -1,5 +1,6 @@
 package by.bsuir.oop;
 
+import by.bsuir.oop.helpers.DeviceHelper;
 import by.bsuir.oop.helpers.GuiHelper;
 import by.bsuir.oop.model.CommunicationDevice;
 import by.bsuir.oop.packer.Packer;
@@ -17,6 +18,8 @@ import java.io.File;
 public class View extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        DeviceHelper deviceHelper = new DeviceHelper(new Controller());
 
         //Pane for device fields
         ScrollPane fieldsPane = new ScrollPane();
@@ -47,7 +50,7 @@ public class View extends Application {
         addButton.setMinWidth(90);
         addButton.setMaxWidth(90);
         addButton.setOnMousePressed(event -> {
-            Controller.addDevice(devicesComboBox.getValue(), listView);
+            deviceHelper.addDevice(devicesComboBox.getValue(), listView);
             listView.fireEvent(event);
         });
 
@@ -55,7 +58,7 @@ public class View extends Application {
         deleteButton.setMinWidth(90);
         deleteButton.setMaxWidth(90);
         deleteButton.setOnMousePressed(event -> {
-            Controller.deleteDevices(listView);
+            deviceHelper.deleteDevices(listView);
             fieldsPane.setContent(null);
         });
 

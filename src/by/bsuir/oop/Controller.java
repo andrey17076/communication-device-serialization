@@ -56,7 +56,7 @@ public class Controller {
         return fieldsBox;
     }
 
-    static void addDevice(Class cls, ListView<CommunicationDevice> listView) {
+    public void addDevice(Class cls, ListView<CommunicationDevice> listView) {
 
         try {
             CommunicationDevice device;
@@ -69,7 +69,7 @@ public class Controller {
         }
     }
 
-    static void deleteDevices(ListView<CommunicationDevice> listView) {
+    public void deleteDevices(ListView<CommunicationDevice> listView) {
         CommunicationDevice selectedDevice = listView.getSelectionModel().getSelectedItem();
         listView.getItems().remove(selectedDevice);
     }

@@ -30,7 +30,7 @@ public class PackerLoader {
                     JarEntry entry = entries.nextElement();
 
                     String entryName = entry.getName();
-                    String className = entryName.replace(".class", "");
+                    String className = entryName.replace(".class", ""); //TODO
                     className = className.replace('/', '.');
                     Class c = cl.loadClass(className);
                     Packer instance = (Packer) c.newInstance();
