@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.util.Iterator;
 
 public class Controller {
 
@@ -123,24 +124,34 @@ public class Controller {
 
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
-        Packer packer = (Packer) packerComboBox.getSelectionModel().getSelectedItem();
+        String fileName = file.getName();
+        String fileExtension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
 
-        if (file != null) {
-            Serializer serializer = getSerializer(radioGroup);
-            try {
-                ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
-                BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-                packer.decompress(in, tmpOutputStream);
+        Packer packer = (Packer) packerComboBox.getItems().get(0); //get none packer
 
-                Object[] devices = (Object[]) serializer.deserialize(new ByteArrayInputStream(tmpOutputStream.toByteArray()));
-                listView.getItems().clear();
-                for (Object device : devices) {
-                    listView.getItems().add((CommunicationDevice) device);
-                }
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        Iterator availablePackers = packerComboBox.getItems().iterator();
+        while (availablePackers.hasNext()) {
+            Packer tmpPacker = (Packer) availablePackers.next();
+            if (tmpPacker.getExtension().equals(fileExtension)) {
+                packer = tmpPacker;
+                break;
             }
+        }
+
+        Serializer serializer = getSerializer(radioGroup);
+        try {
+            ByteArrayOutputStream tmpOutputStream = new ByteArrayOutputStream();
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+            packer.decompress(in, tmpOutputStream);
+
+            Object[] devices = (Object[]) serializer.deserialize(new ByteArrayInputStream(tmpOutputStream.toByteArray()));
+            listView.getItems().clear();
+            for (Object device : devices) {
+                listView.getItems().add((CommunicationDevice) device);
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
